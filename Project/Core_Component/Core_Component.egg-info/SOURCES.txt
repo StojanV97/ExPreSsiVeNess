@@ -1,0 +1,14 @@
+setup.py
+Core/__init__.py
+Core/admin.py
+Core/apps.py
+Core/models.py
+Core/tests.py
+Core/urls.py
+Core/views.py
+Core_Component.egg-info/PKG-INFO
+Core_Component.egg-info/SOURCES.txt
+Core_Component.egg-info/dependency_links.txt
+Core_Component.egg-info/not-zip-safe
+Core_Component.egg-info/requires.txt
+Core_Component.egg-info/top_level.txt

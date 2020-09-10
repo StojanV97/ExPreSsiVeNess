@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Graph Vizualization</title>
+		<script type="text/javascript" src="https://d3js.org/d3.v3.js"></script>
+		<title>ExPreSsivNess</title>
+		{% block head_sadrzaj %}{% endblock %}
+		<style>
+			body{
+				padding: 0;
+				margin: 0;
+				background-color: #f4f4f4;
+				height:100vh;
+			}
+			.container{
+				width:80%;
+				margin: auto;
+			}
+			header{
+				background:#35424a;
+				color:#ffffff;
+				padding-top:20px;
+				min-height:70px;
+				border-bottom:#e8491d 3px solid;
+			}
+			#controls{
+				text-align:right;
+
+			}
+			#title{
+				float:left;
+				font-size : 20px;
+				margin-top : -20px;
+			}
+			header .g{
+				color: #e8491d;
+			}
+			#forma{
+				float:right;
+				padding-top:20px;
+			}
+			footer{
+				margin-top: 450px;
+				background-color: #e8491d;
+				color: white;
+				padding-top: 15px;
+				padding-bottom: 10px;
+				bottom: 0;
+				right: 0;
+				width: 100%;
+				position: relative;
+				
+			}
+			#boxes{
+				margin-top:30px;
+			}
+
+
+       #leftbox {
+                float:left;
+				overflow:scroll;
+                width:30%;
+                height:430px;
+                margin-top:30px;
+            }
+
+            #rightbox{
+                float:right;
+                width:70%;
+                height:500px;
+            }
+			.pretraga{
+				margin-left:20px;
+			}
+			#cbox{
+				margin-left:20px;
+			}
+			#pretraga{
+				margin-left:20px;
+			}
+			#pretraga2{
+				margin-left:20px;
+			}
+			.list-color{
+				color: #e8491d
+			}
+			#form-c{
+			position:relative;
+			}
+
+		
+		</style>
+	</head>
+	<body>
+	  <header>
+			<div class="container">
+				<div id="title">
+					<h1><span class="g">Graph</span> Vizualization</h1>
+				</div>
+				<form id="forma" method="POST"  action="">
+		  				{% csrf_token %}
+						   <input type="text" class="EnterPath" name="path" placeholder="Unesite putanju do fajla">
+						{% if graph == None %}
+						   <input type="submit" name="ucitaj plugin" value="Ucitaj Plugin" onclick = "this.form.action = &quot{% url 'read_plugins' %}&quot">
+						{% endif %}
+				</form>
+			</div>
+	  </header>
+	  		  <div id = "boxes">
+			  <form  method="POST"  action="" id="form-c" >
+		  				{% csrf_token %}
+						   <select  id="pretraga" name="countries">
+								  <option value="Display All">Display All</option>
+								  <option value="Europe">Europe</option>
+								  <option value="Asia">Asia</option>
+								  <option value="North America">North America</option>
+								  <option value="South America">South America</option>
+							      <option value="Africa">Africa</option>
+						   </select>
+						   <input id="pretraga2" type="submit" name="show continent" value="Show Continent" onclick = "this.form.action = &quot{% url 'show_continent' %}&quot">
+				</form>
+            <div id = "leftbox">
+					 <ul id="list">
+					{% if flag  %}
+					  {% for vertex in g_f_c.outgoing %}
+						<li class="{% if vertex.element.found %} list-color
+											{% endif %}">
+							{{ vertex.element.element.country_name }}</li>
+								<ul   class="{% if vertex.element.found %} list-color
+											{% endif %}">
+									{% for country in vertex.element.element.country_border_names %}
+										<li>{{country}}</li>
+									{% endfor %}
+								</ul>
+					  {% endfor %}
+					{% endif %}
+			</ul>
+			</div>
+			<form method="POST" action="">
+				{% csrf_token %}
+				<input class="pretraga" type="text"  name="country" placeholder="Ime drzave za pretragu">
+				<input class="pretraga" type="submit" name="tree_view" value="treeView" onclick = "this.form.action = &quot{% url 'search_country' %}&quot">
+			</form>
+            <div id = "rightbox">
+			
+				{% block content %}{% endblock %}
+            </div>
+		</div>
+		<footer>
+			Extensible Platform for Structure Visualization and Navigation 
+		</footer>
+
+	</body>
+</html>

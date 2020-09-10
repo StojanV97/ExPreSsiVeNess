@@ -1,0 +1,100 @@
+
+{% extends "base.html" %}
+
+{% block force_layout %}
+<!DOCTYPE html>
+<style>
+
+.node {
+  cursor: pointer;
+  color: #3182bd;
+
+}
+
+.link {
+  fill: none;
+  stroke: #9ecae1;
+  stroke-width: 1.5px;
+}
+
+     
+    </style>
+
+<div>
+    <svg width="500" height="500">
+
+    </svg>
+</div>
+    <script>
+        // Define the dimensions of the visualization. 
+        // We're using a size that's convenient for displaying the graphic on
+  	
+		var svg = d3.select("#svgContent")
+        .append("g")
+
+               // We're using a size that's convenient for displaying the graphic on
+        var nodes = {
+            {% for vertex in g_f_c.outgoing %}
+                "node_{{vertex.element.ajdi}}": { id: "node_{{vertex.element.ajdi}}" ,name: "{{vertex.element.name}}",found: "{{vertex.element.found}}"},
+			{% endfor %}
+        };
+
+        var links = [
+            {% for vertex in g_f_c.outgoing %}
+                {% for edge in g_f_c.outgoing[vertex] %}
+                    {
+                        source : "node_{{edge.ajdis}}",
+                        target: "node_{{edge.ajdid}}"
+                    },
+                {% endfor %}
+            {% endfor %}
+        ];
+
+        links.forEach(function(link) {
+            link.source = nodes[link.source];
+            link.target = nodes[link.target];
+        });
+
+
+        var force = d3.layout.force()
+        .size([950, 600])   // size of canvas
+        .nodes(d3.values(nodes))
+        .links(links)
+        .on("tick", tick)
+        .linkDistance(300)
+        .charge(-600)
+        .start();
+
+
+        var link = svg.selectAll('.link')
+            .data(force.links())
+            .enter().append('line')
+            .attr('class', 'link')
+            .style("stroke", 'black')
+                    .style("stroke-width", 0.8);
+   
+        var node = svg.selectAll('.node')
+            .data(force.nodes()) //add
+            .enter().append('g')
+            .attr('class', 'node')
+            // .attr('id', function(d){return d.id;});
+
+        
+        var selected =  svg.selectAll('.node').each(function(d){view(d,svg);});
+        
+     
+
+     function tick(e) {
+        node.attr("transform", function(d) {return "translate(" + d.x + "," + d.y + ")";})
+            .call(force.drag);
+
+        link.attr('x1', function(d) { return d.source.x; })
+            .attr('y1', function(d) { return d.source.y; })
+            .attr('x2', function(d) { return d.target.x; })
+            .attr('y2', function(d) { return d.target.y; });
+      
+	}
+        
+    </script>
+
+{% endblock %}
