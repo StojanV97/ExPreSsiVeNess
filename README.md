@@ -10,5 +10,8 @@
     
 ## Tech Stack : 
   Integration platform - Python setuptools(pkg_resources)
+  
   GUI - WEB (HTML,CSS,JS), Django
+  
   Vizualization - D3.js
+  
